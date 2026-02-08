@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Our Forever | Interactive Love Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff2e63;
+            --secondary: #ff9a9e;
+            --dark: #1a0b2e;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--dark);
+            color: white;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-script {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Custom Scrollbar Hide */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 46, 99, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 46, 99, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 46, 99, 0); }
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-shake { animation: shake 0.5s; }
+        .pulse-ring { animation: pulse-glow 2s infinite; }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 3D Card Flip */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+        
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Touch feedback */
+        .touch-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Heartbeat Visualizer Bars */
+        .bar {
+            width: 6px;
+            background: linear-gradient(to top, #ff0055, #ff99cc);
+            border-radius: 99px;
+            animation: equalizer 1s ease-in-out infinite;
+        }
+        @keyframes equalizer {
+            0% { height: 10%; }
+            50% { height: 100%; }
+            100% { height: 10%; }
+        }
+
+        /* Capsule History Styles */
+        .capsule-history-item {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-pink-500 selection:text-white">
+
+    <!-- Background Canvas -->
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full -z-10"></canvas>
+
+    <!-- Main Container -->
+    <main class="relative w-full max-w-md mx-auto min-h-screen flex flex-col pb-20">
+
+        <!-- Header -->
+        <header class="p-6 flex justify-between items-center z-20">
+            <div class="text-2xl font-script text-pink-400">Us.</div>
+            <button id="musicToggle" class="w-10 h-10 rounded-full glass flex items-center justify-center text-pink-300 touch-btn">
+                <span id="musicIcon">🎵</span>
+            </button>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="flex flex-col items-center justify-center pt-4 pb-10 text-center px-6 relative">
+            <div class="relative w-48 h-48 mb-6">
+                <!-- Decorative Rings -->
+                <div class="absolute inset-0 border-2 border-pink-500/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                <div class="absolute inset-2 border border-pink-400/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                
+                <!-- Main Image -->
+                <div class="absolute inset-4 rounded-full overflow-hidden border-4 border-pink-500/50 shadow-[0_0_30px_rgba(255,0,85,0.4)] animate-float">
+                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600&auto=format&fit=crop" alt="Couple" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <h1 class="text-4xl font-script mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-rose-500">
+                Every moment with you
+            </h1>
+            <p class="text-gray-400 text-sm tracking-widest uppercase mb-6">Is a memory I never want to forget</p>
+            
+            <!-- Heartbeat Sync Visualizer -->
+            <div class="flex items-end justify-center gap-1 h-12 w-32 opacity-70 mb-8" id="heartbeatVis">
+                <!-- Bars generated by JS -->
+            </div>
+
+            <button onclick="document.getElementById('card-section').scrollIntoView({behavior: 'smooth'})" class="px-8 py-3 bg-gradient-to-r from-pink-600 to-rose-600 rounded-full font-bold shadow-lg shadow-pink-600/30 touch-btn flex items-center gap-2">
+                <span>Open Surprise</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+            </button>
+        </section>
+
+        <!-- Interactive 3D Card Section -->
+        <section id="card-section" class="py-10 px-6 flex flex-col items-center">
+            <h2 class="text-2xl font-script text-pink-200 mb-8">A Message For You</h2>
+            
+            <div class="card-container perspective-1000 w-full h-[450px] cursor-pointer group" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner relative w-full h-full">
+                    
+                    <!-- Front -->
+                    <div class="absolute w-full h-full backface-hidden rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                        <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover opacity-60">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex flex-col justify-end p-8">
+                            <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-4 animate-bounce">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </div>
+                            <h3 class="text-3xl font-script text-white">Tap to Reveal</h3>
+                            <p class="text-pink-300 text-xs uppercase tracking-widest mt-2">Something special awaits</p>
+                        </div>
+                    </div>
+
+                    <!-- Back -->
+                    <div class="absolute w-full h-full backface-hidden rotate-y-180 rounded-3xl glass p-8 flex flex-col justify-center items-center text-center border border-pink-500/30 bg-[#1a0b2e]/90">
+                        <div class="text-5xl mb-6 animate-pulse">💌</div>
+                        <h3 class="text-2xl font-script text-pink-400 mb-4">My Forever Promise</h3>
+                        <p class="text-gray-200 leading-relaxed text-sm mb-6">
+                            "In a sea of people, my eyes will always search for you. You are my today and all of my tomorrows."
+                        </p>
+                        <div class="w-16 h-1 bg-pink-500 rounded-full mb-6"></div>
+                        <p class="text-xs text-gray-400 uppercase tracking-widest">Yours Always</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Love Capsule (Time Capsule) Feature with Storage -->
+        <section class="py-10 px-6 w-full">
+            <div class="glass rounded-3xl p-6 relative overflow-hidden border border-pink-500/20">
+                <!-- Decorative background icon -->
+                <div class="absolute -right-10 -top-10 text-9xl text-white/5 rotate-12 pointer-events-none">🔒</div>
+
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-pink-600 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-xl font-bold text-white">Our Love Capsule</h2>
+                        </div>
+                        <span class="text-xs text-pink-400 bg-pink-400/10 px-2 py-1 rounded-full" id="storageCount">0 saved</span>
+                    </div>
+                    
+                    <p class="text-gray-400 text-sm mb-6">
+                        Write a secret message. Lock it. It will be stored forever in your browser's heart.
+                    </p>
+
+                    <!-- Input Area -->
+                    <div id="capsuleInputArea" class="transition-all duration-500">
+                        <textarea id="capsuleMessage" rows="3" placeholder="Type a secret promise..." class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 resize-none text-sm mb-4"></textarea>
+                        
+                        <button onclick="lockCapsule()" class="w-full py-3 bg-pink-600 hover:bg-pink-700 rounded-xl font-bold text-sm uppercase tracking-wider transition shadow-lg shadow-pink-900/50 touch-btn flex justify-center items-center gap-2">
+                            <span>Seal & Save Forever</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Locked State (Hidden initially) -->
+                    <div id="capsuleLockedArea" class="hidden text-center py-4">
+                        <div class="w-20 h-20 mx-auto bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-pink-500/40 pulse-ring cursor-pointer touch-btn" onclick="unlockCapsule()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-pink-300 mb-1">Capsule Sealed</h3>
+                        <p class="text-xs text-gray-400">Tap the lock to reveal your promise</p>
+                        <button onclick="showNewCapsuleForm()" class="mt-4 text-xs text-pink-400 underline">Create New Capsule</button>
+                    </div>
+
+                    <!-- Revealed Message (Hidden initially) -->
+                    <div id="capsuleRevealedArea" class="hidden mt-4 p-4 bg-white/5 rounded-xl border border-pink-500/30 relative">
+                        <button onclick="hideCapsule()" class="absolute top-2 right-2 text-gray-500 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <p class="text-xs text-pink-400 uppercase tracking-widest mb-2">Our Secret:</p>
+                        <p id="revealedText" class="text-white font-script text-xl leading-relaxed"></p>
+                        <div class="mt-3 text-right text-xs text-gray-500">Sealed on <span id="dateStamp"></span></div>
+                    </div>
+
+                    <!-- Capsule History List -->
+                    <div id="capsuleHistory" class="mt-6 border-t border-white/10 pt-4 hidden">
+                        <h3 class="text-sm font-bold text-gray-300 mb-3 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            Saved Memories
+                        </h3>
+                        <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto">
+                            <!-- History items will be inserted here -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Memory Game -->
+        <section class="py-10 px-6 w-full">
+             <h2 class="text-2xl font-script text-pink-200 mb-6 text-center">Catch My Heart</h2>
+             <p class="text-center text-gray-400 text-xs mb-4">Tap the hearts before they disappear!</p>
+             
+             <div id="gameContainer" class="relative w-full h-64 glass rounded-2xl overflow-hidden border border-white/10 cursor-crosshair touch-none">
+                 <div id="gameScore" class="absolute top-4 right-4 text-2xl font-bold text-pink-500 z-20">0</div>
+                 <div id="startGameOverlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-10 backdrop-blur-sm">
+                     <button onclick="startGame()" class="px-6 py-2 bg-pink-600 rounded-full font-bold text-sm animate-bounce">Start Game</button>
+                 </div>
+             </div>
+        </section>
+
+        <footer class="text-center py-8 text-gray-600 text-xs">
+            <p>Made with infinite love • Messages stored locally</p>
+        </footer>
+
+    </main>
+
+    <!-- Audio -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // --- Storage Configuration ---
+        const STORAGE_KEY = 'loveCapsules';
+        
+        // Load existing capsules on startup
+        let capsules = [];
+        
+        function loadCapsules() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                capsules = JSON.parse(stored);
+                updateStorageCount();
+                renderHistory();
+            }
+        }
+        
+        function saveCapsule(message) {
+            const capsule = {
+                id: Date.now(),
+                message: message,
+                date: new Date().toISOString(),
+                opened: false
+            };
+            capsules.unshift(capsule); // Add to beginning
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(capsules));
+            updateStorageCount();
+            renderHistory();
+            return capsule;
+        }
+        
+        function updateStorageCount() {
+            const count = capsules.length;
+            document.getElementById('storageCount').innerText = `${count} saved`;
+            if (count > 0) {
+                document.getElementById('capsuleHistory').classList.remove('hidden');
+            }
+        }
+        
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            
+            capsules.slice(0, 5).forEach((cap, index) => {
+                const date = new Date(cap.date).toLocaleDateString();
+                const div = document.createElement('div');
+                div.className = 'capsule-history-item flex items-center justify-between p-3 bg-white/5 rounded-lg cursor-pointer hover:bg-white/10 transition';
+                div.onclick = () => loadCapsuleFromHistory(index);
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <span class="text-lg">${cap.opened ? '💝' : '🔒'}</span>
+                        <div class="truncate">
+                            <p class="text-sm text-gray-300 truncate">${cap.message.substring(0, 30)}${cap.message.length > 30 ? '...' : ''}</p>
+                            <p class="text-xs text-gray-500">${date}</p>
+                        </div>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                `;
+                list.appendChild(div);
+            });
+        }
+        
+        function loadCapsuleFromHistory(index) {
+            const cap = capsules[index];
+            document.getElementById('revealedText').innerText = cap.message;
+            document.getElementById('dateStamp').innerText = new Date(cap.date).toLocaleDateString();
+            
+            // Mark as opened
+            capsules[index].opened = true;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(capsules));
+            renderHistory();
+            
+            // Show revealed view
+            document.getElementById('capsuleInputArea').classList.add('hidden');
+            document.getElementById('capsuleLockedArea').classList.add('hidden');
+            document.getElementById('capsuleRevealedArea').classList.remove('hidden');
+        }
+
+        // --- 1. Particle Background (Hearts) ---
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * height;
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height + 20;
+                this.vx = Math.random() * 1 - 0.5;
+                this.vy = Math.random() * -1 - 0.2;
+                this.size = Math.random() * 12 + 4;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = `rgba(255, ${Math.floor(Math.random() * 50 + 50)}, ${Math.floor(Math.random() * 100 + 100)}, ${this.opacity})`;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.y < -20) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.font = `${this.size}px serif`;
+                ctx.fillText('❤', this.x, this.y);
+            }
+        }
+
+        for (let i = 0; i < 30; i++) particles.push(new Particle());
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // --- 2. Heartbeat Visualizer ---
+        const visContainer = document.getElementById('heartbeatVis');
+        for(let i=0; i<8; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.animationDelay = `${i * 0.1}s`;
+            bar.style.height = `${Math.random() * 80 + 20}%`;
+            visContainer.appendChild(bar);
+        }
+
+        // --- 3. Love Capsule Logic with Storage ---
+        const inputArea = document.getElementById('capsuleInputArea');
+        const lockedArea = document.getElementById('capsuleLockedArea');
+        const revealedArea = document.getElementById('capsuleRevealedArea');
+        const msgInput = document.getElementById('capsuleMessage');
+        const revealedText = document.getElementById('revealedText');
+        const dateStamp = document.getElementById('dateStamp');
+
+        function lockCapsule() {
+            const msg = msgInput.value.trim();
+            if(!msg) {
+                msgInput.classList.add('animate-shake');
+                setTimeout(() => msgInput.classList.remove('animate-shake'), 500);
+                return;
+            }
+            
+            // Save to localStorage
+            const capsule = saveCapsule(msg);
+            
+            // Display
+            revealedText.innerText = msg;
+            dateStamp.innerText = new Date(capsule.date).toLocaleDateString();
+            
+            // Clear input
+            msgInput.value = '';
+            
+            // Animation transition
+            inputArea.style.opacity = '0';
+            setTimeout(() => {
+                inputArea.classList.add('hidden');
+                lockedArea.classList.remove('hidden');
+            }, 300);
+        }
+
+        function unlockCapsule() {
+            lockedArea.classList.add('hidden');
+            revealedArea.classList.remove('hidden');
+            revealedArea.classList.add('animate-float');
+        }
+
+        function hideCapsule() {
+            revealedArea.classList.add('hidden');
+            lockedArea.classList.remove('hidden');
+        }
+        
+        function showNewCapsuleForm() {
+            lockedArea.classList.add('hidden');
+            revealedArea.classList.add('hidden');
+            inputArea.classList.remove('hidden');
+            inputArea.style.opacity = '1';
+            msgInput.focus();
+        }
+
+        // --- 4. Mini Game: Catch the Heart ---
+        const gameContainer = document.getElementById('gameContainer');
+        const gameScoreDisplay = document.getElementById('gameScore');
+        const startOverlay = document.getElementById('startGameOverlay');
+        let score = 0;
+        let gameActive = false;
+        let spawnInterval;
+
+        function startGame() {
+            score = 0;
+            gameScoreDisplay.innerText = score;
+            gameActive = true;
+            startOverlay.classList.add('hidden');
+            
+            const oldHearts = document.querySelectorAll('.game-heart');
+            oldHearts.forEach(h => h.remove());
+
+            spawnInterval = setInterval(spawnHeart, 800);
+            setTimeout(endGame, 30000);
+        }
+
+        function spawnHeart() {
+            if(!gameActive) return;
+            
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'game-heart absolute text-2xl cursor-pointer select-none transition-transform active:scale-125';
+            
+            const x = Math.random() * (gameContainer.offsetWidth - 30);
+            const y = Math.random() * (gameContainer.offsetHeight - 30);
+            
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            
+            heart.addEventListener('mousedown', () => catchHeart(heart));
+            heart.addEventListener('touchstart', (e) => { e.preventDefault(); catchHeart(heart); });
+
+            gameContainer.appendChild(heart);
+
+            setTimeout(() => {
+                if(heart.parentNode) {
+                    heart.style.opacity = '0';
+                    setTimeout(() => heart.remove(), 300);
+                }
+            }, 1500);
+        }
+
+        function catchHeart(el) {
+            score++;
+            gameScoreDisplay.innerText = score;
+            el.innerHTML = '💖';
+            el.style.transform = 'scale(1.5)';
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 200);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(spawnInterval);
+            startOverlay.innerHTML = `<div class="text-center"><div class="text-2xl font-bold text-white mb-2">Time's Up!</div><div class="text-pink-400 text-xl mb-4">Score: ${score}</div><button onclick="startGame()" class="px-6 py-2 bg-pink-600 rounded-full font-bold text-sm">Play Again</button></div>`;
+            startOverlay.classList.remove('hidden');
+        }
+
+        // --- 5. Music Toggle ---
+        const musicBtn = document.getElementById('musicToggle');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicIcon.innerText = "🎵";
+                musicBtn.classList.remove('bg-pink-600');
+                musicBtn.classList.add('glass');
+            } else {
+                bgMusic.play();
+                musicIcon.innerText = "⏸";
+                musicBtn.classList.remove('glass');
+                musicBtn.classList.add('bg-pink-600');
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Initialize
+        loadCapsules();
+
+    </script>
+</body>
+</html>
